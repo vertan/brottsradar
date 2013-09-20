@@ -1,3 +1,3 @@
-#!flask/bin/python
-from app import app
+#!venv/bin/python
+from upphack import app
 app.run(debug = True)
