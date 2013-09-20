@@ -5,16 +5,15 @@
 #
 #     [tag, value, locationData]
 #
-# The locationData is in the form:
-# `{first_line, first_column, last_line, last_column}`, which is a
-# format that can be fed directly into [Jison](http://github.com/zaach/jison).
-# These are read by Jison in the `parser.lexer` function defined in
-# coffee-script.coffee.
+# where locationData is {first_line, first_column, last_line, last_column}, which is a
+# format that can be fed directly into [Jison](http://github.com/zaach/jison).  These
+# are read by jison in the `parser.lexer` function defined in coffee-script.coffee.
 
 {Rewriter, INVERSES} = require './rewriter'
 
 # Import the helpers we need.
-{count, starts, compact, last, locationDataToString} = require './helpers'
+{count, starts, compact, last, repeat, invertLiterate,
+locationDataToString,  throwSyntaxError} = require './helpers'
 
 # The Lexer Class
 # ---------------
@@ -42,7 +41,7 @@ exports.Lexer = class Lexer
     @outdebt  = 0              # The under-outdentation at the current level.
     @indents  = []             # The stack of all current indentation levels.
     @ends     = []             # The stack for pairing up tokens.
-    @tokens   = []             # Stream of parsed tokens in the form `['TYPE', value, line]`.
+    @tokens   = []             # Stream of parsed tokens in the form `['TYPE', value, location data]`.
 
     @chunkLine =
         opts.line or 0         # The start line for the current @chunk.
@@ -86,13 +85,7 @@ exports.Lexer = class Lexer
     if WHITESPACE.test code
         code = "\n#{code}"
         @chunkLine--
-    if @literate
-      lines = for line in code.split('\n')
-        if match = LITERATE.exec line
-          line[match[0].length..]
-        else
-          '# ' + line
-      code = lines.join '\n'
+    code = invertLiterate code if @literate
     code
 
   # Tokenizers
@@ -183,9 +176,9 @@ exports.Lexer = class Lexer
       @error "octal literal '#{number}' must be prefixed with '0o'"
     lexedLength = number.length
     if octalLiteral = /^0o([0-7]+)/.exec number
-      number = '0x' + (parseInt octalLiteral[1], 8).toString 16
+      number = '0x' + parseInt(octalLiteral[1], 8).toString 16
     if binaryLiteral = /^0b([01]+)/.exec number
-      number = '0x' + (parseInt binaryLiteral[1], 2).toString 16
+      number = '0x' + parseInt(binaryLiteral[1], 2).toString 16
     @token 'NUMBER', number, 0, lexedLength
     lexedLength
 
@@ -229,7 +222,7 @@ exports.Lexer = class Lexer
     if here
       @token 'HERECOMMENT',
         (@sanitizeHeredoc here,
-          herecomment: true, indent: Array(@indent + 1).join(' ')),
+          herecomment: true, indent: repeat ' ', @indent),
         0, comment.length
     comment.length
 
@@ -330,7 +323,7 @@ exports.Lexer = class Lexer
         @suppressNewlines()
         return indent.length
       diff = size - @indent + @outdebt
-      @token 'INDENT', diff, 0, indent.length
+      @token 'INDENT', diff, indent.length - size, size
       @indents.push diff
       @ends.push 'OUTDENT'
       @outdebt = @indebt = 0
@@ -445,7 +438,6 @@ exports.Lexer = class Lexer
         attempt = match[1]
         indent = attempt if indent is null or 0 < attempt.length < indent.length
     doc = doc.replace /// \n #{indent} ///g, '\n' if indent
-    doc = doc.replace /\n# \n/g, '\n\n' if @literate
     doc = doc.replace /^\n/, '' unless herecomment
     doc
 
@@ -597,7 +589,10 @@ exports.Lexer = class Lexer
         @tokens.push token
       else
         @error "Unexpected #{tag}"
-    @token ')', ')', offsetInChunk + lexedLength, 0 if interpolated
+    if interpolated
+      rparen = @makeToken ')', ')', offsetInChunk + lexedLength, 0
+      rparen.stringEnd = true
+      @tokens.push rparen
     tokens
 
   # Pairs up a closing token, ensuring that all listed pairs of tokens are
@@ -635,7 +630,7 @@ exports.Lexer = class Lexer
     column = @chunkColumn
     if lineCount > 0
       lines = string.split '\n'
-      column = (last lines).length
+      column = last(lines).length
     else
       column += string.length
 
@@ -652,7 +647,7 @@ exports.Lexer = class Lexer
     # so if last_column == first_column, then we're looking at a character of length 1.
     lastCharacter = Math.max 0, length - 1
     [locationData.last_line, locationData.last_column] =
-      @getLineAndColumnFromChunk offsetInChunk + (length - 1)
+      @getLineAndColumnFromChunk offsetInChunk + lastCharacter
 
     token = [tag, value, locationData]
 
@@ -695,11 +690,11 @@ exports.Lexer = class Lexer
     body = body.replace /// #{quote} ///g, '\\$&'
     quote + @escapeLines(body, heredoc) + quote
 
-  # Throws a syntax error on the current `@line`.
+  # Throws a compiler error on the current position.
   error: (message) ->
     # TODO: Are there some cases we could improve the error line number by
     # passing the offset in the chunk where the error happened?
-    throw SyntaxError "#{message} on line #{ @chunkLine + 1 }"
+    throwSyntaxError message, first_line: @chunkLine, first_column: @chunkColumn
 
 # Constants
 # ---------
@@ -781,8 +776,6 @@ WHITESPACE = /^[^\n\S]+/
 
 COMMENT    = /^###([^#][\s\S]*?)(?:###[^\n\S]*|(?:###)$)|^(?:\s*#(?!##[^#]).*)+/
 
-LITERATE   = /^([ ]{4}|\t)/
-
 CODE       = /^[-=]>/
 
 MULTI_DENT = /^(?:\n[^\n\S]*)+/
@@ -853,11 +846,11 @@ BOOL = ['TRUE', 'FALSE']
 # See: http://www.mozilla.org/js/language/js20-2002-04/rationale/syntax.html#regular-expressions
 #
 # Our list is shorter, due to sans-parentheses method calls.
-NOT_REGEX = ['NUMBER', 'REGEX', 'BOOL', 'NULL', 'UNDEFINED', '++', '--', ']']
+NOT_REGEX = ['NUMBER', 'REGEX', 'BOOL', 'NULL', 'UNDEFINED', '++', '--']
 
 # If the previous token is not spaced, there are more preceding tokens that
 # force a division parse:
-NOT_SPACED_REGEX = NOT_REGEX.concat ')', '}', 'THIS', 'IDENTIFIER', 'STRING'
+NOT_SPACED_REGEX = NOT_REGEX.concat ')', '}', 'THIS', 'IDENTIFIER', 'STRING', ']'
 
 # Tokens which could legitimately be invoked or indexed. An opening
 # parentheses or bracket following these tokens will be recorded as the start

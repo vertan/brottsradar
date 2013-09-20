@@ -337,6 +337,18 @@ test "#2502: parenthesizing inner object values", ->
   eq (new A).sections.default, 0
 
 
+test "conditional prototype property assignment", ->
+  debug = false
+
+  class Person
+    if debug
+      age: -> 10
+    else
+      age: -> 20
+
+  eq (new Person).age(), 20
+
+
 test "mild metaprogramming", ->
 
   class Base
@@ -730,13 +742,52 @@ test "#2359: extending native objects that use other typed constructors requires
   eq 'yes!', workingArray.method()
 
 
-test "#2489: removing __bind", ->
+test "#2782: non-alphanumeric-named bound functions", ->
+  class A
+    'b:c': =>
+      'd'
 
-  class Thing
-    foo: (a, b, c) ->
-    bar: (a, b, c) =>
+  eq (new A)['b:c'](), 'd'
 
-  thing = new Thing
 
-  eq thing.foo.length, 3
-  eq thing.bar.length, 3
+test "#2781: overriding bound functions", ->
+  class A
+    a: ->
+        @b()
+    b: =>
+        1
+
+  class B extends A
+    b: =>
+        2
+
+  b = (new A).b
+  eq b(), 1
+
+  b = (new B).b
+  eq b(), 2
+
+
+test "#2791: bound function with destructured argument", ->
+  class Foo
+    method: ({a}) => 'Bar'
+
+  eq (new Foo).method({a: 'Bar'}), 'Bar'
+
+
+test "#2796: ditto, ditto, ditto", ->
+  answer = null
+
+  outsideMethod = (func) ->
+    func.call message: 'wrong!'
+
+  class Base
+    constructor: ->
+      @message = 'right!'
+      outsideMethod @echo
+
+    echo: =>
+      answer = @message
+
+  new Base
+  eq answer, 'right!'
