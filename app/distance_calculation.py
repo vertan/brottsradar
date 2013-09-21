@@ -50,7 +50,7 @@ class DistanceCalculator:
 
         return crime_score
 
-    get_level(crime_score):
+    def get_level(crime_score):
         if crime_score < 9:
             answer = 'FARLIGT'
             level = 'Green'
