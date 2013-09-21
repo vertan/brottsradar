@@ -32,37 +32,23 @@ h3 {
 }
 .footer {
     padding: 20px;
+    padding-right: 10px;
     max-width: 500px;
     color: #fff;
     border-top: 1px solid #fff;
 }
 .green {
-    background: #DF4444;
+    background: #48D848;
 }
 .lime {
-    background: #92DF44;
+    background: #90D848;
 }
 .yellow {
-    background: #DFDF44;
+    background: #D8D848;
 }
 .orange {
-    background: #DF9244;
+    background: #D89048;
 }
 .red {
-    background: #FF0000;
-}
-.radar-logo {
-    width: 150px;
-    height: 50px;
-    background: url("../static/img/radar.png") no-repeat;
-}
-.radar-uh {
-    width: 150px;
-    height: 50px;
-    background: url("../static/img/uh.png") no-repeat;
-}
-.radar-bn {
-    width: 150px;
-    height: 50px;
-    background: url("../static/img/bn.png") no-repeat;
+    background: #D84848;
 }
