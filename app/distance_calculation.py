@@ -53,16 +53,16 @@ class DistanceCalculator:
     def get_level(self, crime_score):
         if crime_score < 9:
             answer = 'TRADIGT'
-            level = 'Green'
+            level = 'green'
         elif crime_score > 8 and crime_score < 19:
             answer = 'LUGNT'
-            level = 'Lime'
+            level = 'lime'
         elif crime_score > 18 and crime_score < 29:
             answer = 'VANLIGT'
-            level = 'Yellow'
+            level = 'yellow'
         elif crime_score > 28 and crime_score < 39:
             answer = 'PIRRIGT'
-            level = 'Orange'
+            level = 'orange'
         else:
             answer = 'FARLIGT'
             level = 'red'
