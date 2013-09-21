@@ -16,7 +16,7 @@ def index():
                            level = level)
     
 @app.route('/status')
-def index():
+def status():
     title = u"Är det säkert att gå ut?"
     answer = 'FARLIGT'
     level = 'red'
