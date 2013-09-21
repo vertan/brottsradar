@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javscript">
+    var newURL = "";
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            window.location = window.location+"/hide?location=undefined"
+        }
+    }
+    function showPosition(position) {
+        window.location = window.location+"/hide?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
+    }
+</script>
+
+LOADING …
+{% endblock %}
