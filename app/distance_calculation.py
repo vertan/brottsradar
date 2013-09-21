@@ -1,28 +1,14 @@
 from app import db, models
 import math
+from datetime import datetime
 from pprint import pprint
 
-class DistanceCalculator
+class DistanceCalculator:
     def __init__(self, latitude, longitude):
         self.latitude = latitude
         self.longitude = longitude
     
-    def find_crimes():
-        clause = "((69.1 * (latitude - :lat) * (latitude - :lat)) + (53.0 * (longitude - :lon) * (longitude - :lon))) < 0.01"
-        query = db.session.query(models.Crime).filter(clause).params(lat=self.latitude, lon=self.longitude)
-        r = query.all()
-        a = 0
-        for i in r:
-            distance = selflaw_of_cosines(i.latitude, self.latitude, i.longitude, self.longitude)
-            # Ignore crimes without a home
-            if i.latitude == 59.858143 and i.longitude == 17.644587:
-                continue
-            if distance < 200:
-                a = a+1 
-                print distance
-                pprint (vars(i))
-
-    def law_of_cosines(lat1, lat2, lon1, lon2):
+    def law_of_cosines(self, lat1, lat2, lon1, lon2):
         R = 6371 # Earht radius in km
         lat1 = lat1 * math.pi / 180;
         lat2 = lat2 * math.pi / 180;
@@ -32,6 +18,37 @@ class DistanceCalculator
 
         # Returns meter
         return d*1000
+    
+    def find_crimes(self):
+        clause = "((69.1 * (latitude - :lat) * (latitude - :lat)) + (53.0 * (longitude - :lon) * (longitude - :lon))) < 0.01"
+        query = db.session.query(models.Crime).filter(clause).params(lat=self.latitude, lon=self.longitude)
+        r = query.all()
+        a = 0
+        crime_score = 0
+        now = datetime.now()
+        for i in r:
+            distance = self.law_of_cosines(i.latitude, self.latitude, i.longitude, self.longitude)
+            # Ignore crimes without a home
+            if i.latitude == 59.858143 and i.longitude == 17.644587:
+                continue
+            if i.date.hour < now.hour - 2 or i.date.hour > now.hour + 2:
+                continue
+            if distance < 200:
+                crime_score = crime_score + self.calculate_crime_score(distance, i)
+                a = a +1 
+                
+        print("Num crimes %d") % (a)
+        return crime_score
+
+    def calculate_crime_score(self, distance, crime):
+        crime_score = (200 - distance)/5
+        
+        if crime.date.year == 2012:
+            crime_score = crime_score * 1.4
+        elif crime.date.year == 2010:
+            crime_score = crime_score * 0.8
+
+        return crime_score
 
 # Flogsta
 my_lat = 59.84886
