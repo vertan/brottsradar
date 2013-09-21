@@ -8,7 +8,10 @@ from app import app
 @app.route('/index')
 def index():
     title = u"Är det säkert att gå ut?"
-    answer = 'hide yo wife, hide yo kids'
+    answer = 'FARLIGT'
+    level = 'red'
     return render_template('index.html',
                            title = title,
-                           answer = answer)
+                           answer = answer,
+                           level = level)
+    
