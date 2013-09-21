@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<script type="text/javscript">
+<script type="text/javascript">
     var newURL = "";
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
-            window.location = window.location+"/status?location=undefined"
+            window.location = window.location+"status?location=undefined"
         }
     }
     function showPosition(position) {
-        window.location = window.location+"/status?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
+        window.location = window.location+"status?latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
     }
+    window.onload = getLocation();
 </script>
 
 LOADING …
