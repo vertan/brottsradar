@@ -1,6 +1,6 @@
 from app import db
 
-class Brott(db.Model):
+class Crime(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String)
     description = db.Column(db.String)
