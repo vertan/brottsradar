@@ -1,0 +1,30 @@
+h1 {
+    font-size: 50px;
+}
+h3 {
+    font-size: 24px;
+}
+.content {
+    min-height: 150px;
+    padding: 20px;
+    background-color: #999;
+}
+.footer {
+    padding: 20px;
+    background-color: #aeaeae;
+}
+.green {
+    background: #DF4444;
+}
+.lime {
+    background: #92DF44;
+}
+.yellow {
+    background: #DFDF44;
+}
+.orange {
+    background: #DF9244;
+}
+.red {
+    background: #FF0000;
+}
