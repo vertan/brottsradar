@@ -14,7 +14,7 @@ def index():
                            title = title,
                            answer = answer,
                            level = level)
-    
+
 @app.route('/status')
 def status():
     longitude = request.args['longitude']
@@ -26,12 +26,11 @@ def status():
         location = distance_calculation.DistanceCalculator(latitude, longitude)
         crime_score = location.find_crimes()
 
-
     title = u"Är det säkert att gå ut?"
-    answer = 'FARLIGT'
-    level = 'red'
+    answer, level = location.get_level(crime_score)
+
     return render_template('status.html',
                            title = title,
                            answer = answer,
                            level = level)
-    
+

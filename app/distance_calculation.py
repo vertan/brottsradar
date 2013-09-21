@@ -50,6 +50,23 @@ class DistanceCalculator:
 
         return crime_score
 
+    def get_level(self, crime_score):
+        if crime_score < 9:
+            answer = 'TRADIGT'
+            level = 'green'
+        elif crime_score > 8 and crime_score < 19:
+            answer = 'LUGNT'
+            level = 'lime'
+        elif crime_score > 18 and crime_score < 29:
+            answer = 'VANLIGT'
+            level = 'yellow'
+        elif crime_score > 28 and crime_score < 39:
+            answer = 'PIRRIGT'
+            level = 'orange'
+        else:
+            answer = 'FARLIGT'
+            level = 'red'
+        return (answer, level)
 # Flogsta
 my_lat = 59.84886
 my_lon = 17.597866
