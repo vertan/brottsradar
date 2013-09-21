@@ -55,23 +55,23 @@ class DistanceCalculator:
         if crime_score < 9:
             answer = 'TRADIGT'
             level = 'green'
-            subtext = 'Zzz... Ingenting händer här inte. Till och med syrsorna hörs.'
+            subtext = u'Zzz... Ingenting händer här inte. Till och med syrsorna hörs.'
         elif crime_score > 8 and crime_score < 19:
             answer = 'LUGNT'
             level = 'lime'
-            subtext = 'Pfff... Det är lugnare än en filbunke. En lugn filbunke.'
+            subtext = u'Pfff... Det är lugnare än en filbunke. En lugn filbunke.'
         elif crime_score > 18 and crime_score < 29:
             answer = 'VANLIGT'
             level = 'yellow'
-            subtext = 'Jaha, området är varken mer eller mindre farligt eller ofarligt.'
+            subtext = u'Jaha, området är varken mer eller mindre farligt eller ofarligt.'
         elif crime_score > 28 and crime_score < 39:
             answer = 'PIRRIGT'
             level = 'orange'
-            subtext = 'Oj! Nu gäller det att vara på sin vakt. Här kan det hända grejer.'
+            subtext = u'Oj! Nu gäller det att vara på sin vakt. Här kan det hända grejer.'
         else:
             answer = 'FARLIGT'
             level = 'red'
-            subtext = 'Argh! Spring för glatta livet. Spring!'
+            subtext = u'Argh! Spring för glatta livet. Spring!'
         return (answer, subtext, level)
 # Flogsta
 my_lat = 59.84886
