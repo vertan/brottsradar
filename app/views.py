@@ -11,4 +11,4 @@ def index():
     answer = 'hide yo wife, hide yo kids'
     return render_template('index.html',
                            title = title,
-                           answer = answer);
+                           answer = answer)
