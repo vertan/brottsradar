@@ -27,10 +27,11 @@ def status():
         crime_score = location.find_crimes()
 
     title = u"Är det säkert att gå ut?"
-    answer, level = location.get_level(crime_score)
+    answer, subtext, level = location.get_level(crime_score)
 
     return render_template('status.html',
                            title = title,
                            answer = answer,
+                           subtext = subtext,
                            level = level)
 
