@@ -6,7 +6,7 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
-            window.location = window.location+"status?location=undefined"
+            window.location = window.location+"status?latitude=e&longitude=e"
         }
     }
     function showPosition(position) {
