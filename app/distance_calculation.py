@@ -54,13 +54,13 @@ class DistanceCalculator:
         if crime_score < 9:
             answer = 'FARLIGT'
             level = 'Green'
-        elif crime_score > 8 and < 19:
+        elif crime_score > 8 and crime_score < 19:
             answer = 'FARLIGT'
             level = 'Lime'
-        elif crime_score > 18 and < 29:
+        elif crime_score > 18 and crime_score < 29:
             answer = 'FARLIGT'
             level = 'Yellow'
-        elif crime_score > 28 and < 39:
+        elif crime_score > 28 and crime_score < 39:
             answer = 'FARLIGT'
             level = 'Orange'
         else:
