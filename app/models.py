@@ -9,3 +9,6 @@ class Crime(db.Model):
     longitude = db.Column(db.Float, index = True)
     latitude = db.Column(db.Float, index = True)
 
+    def __repr__(self):
+                return '<Crime %r>' % (self.title)
+
