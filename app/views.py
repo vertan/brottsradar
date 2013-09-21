@@ -15,3 +15,13 @@ def index():
                            answer = answer,
                            level = level)
     
+@app.route('/status')
+def index():
+    title = u"Är det säkert att gå ut?"
+    answer = 'FARLIGT'
+    level = 'red'
+    return render_template('status.html',
+                           title = title,
+                           answer = answer,
+                           level = level)
+    
