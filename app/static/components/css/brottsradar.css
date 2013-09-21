@@ -1,17 +1,29 @@
+body {
+    background: #ff0000;
+}
 h1 {
     font-size: 50px;
 }
 h3 {
     font-size: 24px;
 }
+.header h1 {
+    color: #fff;
+}
 .content {
-    min-height: 150px;
+    min-height: 300px;
+    margin-top: 25px;
     padding: 20px;
-    background-color: #999;
+    background-color:rgba(255,0,0,0.9);
+    color: #fff;
+    border-radius: 15px 15px 0 0;
+}
+.content h1 {
+    color: #fff;
+    font-size: 100px;
 }
 .footer {
     padding: 20px;
-    background-color: #aeaeae;
 }
 .green {
     background: #DF4444;
