@@ -1,17 +1,41 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald:700);
+@import url(http://fonts.googleapis.com/css?family=Lora);
+
+body {
+    background: #ff0000;
+}
 h1 {
     font-size: 50px;
 }
 h3 {
     font-size: 24px;
 }
+.header h1 {
+    color: #fff;
+}
 .content {
-    min-height: 150px;
+    min-height: 300px;
+    max-width: 500px;
+    margin-top: 25px;
     padding: 20px;
-    background-color: #999;
+    background-color:rgba(255,0,0,0.9);
+    color: #fff;
+    border-radius: 15px 15px 0 0;
+}
+.content h1 {
+    font-family: 'Oswald';
+    font-weight: 700;
+    color: #fff;
+    font-size: 100px;
+}
+.content h4 {
+    font-family: 'Lora';
 }
 .footer {
     padding: 20px;
-    background-color: #aeaeae;
+    max-width: 500px;
+    color: #fff;
+    border-top: 1px solid #fff;
 }
 .green {
     background: #DF4444;
